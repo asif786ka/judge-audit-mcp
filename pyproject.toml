@@ -1,0 +1,74 @@
+[project]
+name = "judge-audit-mcp"
+version = "0.1.0"
+description = "Judge QA for agents — measures whether your LLM judge agrees with humans, drifted between runs, or is biased, before you ship the number"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Asif" }]
+keywords = ["mcp", "llm-as-judge", "evaluation", "evals", "cohens-kappa", "calibration",
+            "bias", "position-bias", "self-preference", "llm-evaluation", "judge-drift"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+]
+# One dependency, same as its two siblings. The statistics are pure stdlib —
+# Cohen's κ, bootstrap intervals, exact binomial tests and OLS are a few hundred
+# lines, and an audit tool that costs an 80MB scientific-Python install to try is
+# an audit tool nobody tries. `smoke_test.py` cross-checks every estimator against
+# scipy/scikit-learn when they happen to be present, so the trade is verifiable
+# rather than asserted.
+dependencies = [
+    "mcp>=1.2.0",
+]
+
+[project.optional-dependencies]
+# Only needed to *doubt* this package, not to use it: the smoke test cross-checks
+# every statistic here against the reference implementations when these are
+# installed, and skips those assertions when they aren't.
+verify = ["scipy>=1.10", "scikit-learn>=1.3", "numpy>=1.24"]
+# Only needed for the optional live judge adapter (JUDGE_AUDIT_LIVE=1).
+live = ["anthropic>=0.40", "openai>=1.0"]
+
+[project.urls]
+Homepage = "https://github.com/asif786ka/judge-audit-mcp"
+Repository = "https://github.com/asif786ka/judge-audit-mcp"
+Issues = "https://github.com/asif786ka/judge-audit-mcp/issues"
+
+[project.scripts]
+# MCP server (stdio) for IDE/agent clients:  uvx judge-audit-mcp
+judge-audit-mcp = "judge_audit_mcp.server:main"
+# CI gate:  judge-audit drift v1.jsonl v2.jsonl --fail-on serious
+judge-audit = "judge_audit_mcp.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["judge_audit_mcp"]
+
+[tool.hatch.build.targets.sdist]
+# The README invites people to run `python smoke_test.py` and check the claims
+# themselves, so the sdist ships the suite, the fixtures, and the generator that
+# produced them. An unverifiable claim about being trustworthy is worth nothing —
+# and that goes double for a package whose entire pitch is that you should verify
+# your measuring instruments.
+include = [
+    "/judge_audit_mcp",
+    "/fixtures",
+    "/smoke_test.py",
+    "/README.md",
+    "/CHANGELOG.md",
+    "/LICENSE",
+    "/pyproject.toml",
+]
