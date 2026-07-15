@@ -1,6 +1,6 @@
 [project]
 name = "judge-audit-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "Judge QA for agents — measures whether your LLM judge agrees with humans, drifted between runs, or is biased, before you ship the number"
 readme = "README.md"
 requires-python = ">=3.10"

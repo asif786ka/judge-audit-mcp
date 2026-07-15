@@ -14,7 +14,7 @@ from .models import (
     JudgeRecord,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = ["AuditResult", "Finding", "GoldLabel", "JudgeFingerprint", "JudgeRecord",
            "__version__"]

@@ -5,6 +5,12 @@ All notable changes to judge-audit-mcp are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] — 2026-07-15
+
+### Changed
+- README no longer frames the package as part of a multi-server trilogy; docs
+  focus on judge fingerprints and confidence tiers alone.
+
 ## [0.1.0] — 2026-07-15
 
 Initial release.
@@ -14,14 +20,11 @@ Initial release.
 **Core abstraction**
 - `JudgeFingerprint` — model + prompt hash + rubric hash + scale + temperature +
   provider, with `comparable_to()` returning `identical | unknown | incomparable`.
-  The third axis of the trilogy: `VersionRange.status_at()` (mobile-docs-mcp),
-  `PolicyWindow.status_on()` (store-preflight-mcp), `JudgeFingerprint.comparable_to()`.
   Prompt and rubric are hashed, never stored; whitespace-normalised so a
   reformatted prompt isn't reported as a changed one.
 - `temper_confidence()` — statistical findings downgrade themselves to `heuristic`
-  below the power floor (30 paired obs, 50 for κ) and never gate a build. Direct
-  analogue of `PolicyWindow.severity_on()`. Mechanical findings are exempt: a
-  string comparison needs no sample size.
+  below the power floor (30 paired obs, 50 for κ) and never gate a build.
+  Mechanical findings are exempt: a string comparison needs no sample size.
 
 **Tools**
 - `detect_judge_drift` — fingerprint diff + anchor-based decomposition of a score
