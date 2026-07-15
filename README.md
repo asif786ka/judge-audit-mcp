@@ -47,20 +47,11 @@ unfalsifiable after the fact unless you happened to log the right things.
 
 ## The idea: a score is comparable only within a fingerprint
 
-This is the third of three servers built on one idea, and the idea is that
-**a claim isn't true, it's true within a scope** — so model the scope, and the
-tool writes itself:
-
-| server | a claim is valid within… | the method |
-|---|---|---|
-| [mobile-docs-mcp](https://github.com/asif786ka/mobile-docs-mcp) | a **version range** | `VersionRange.status_at(version)` |
-| [store-preflight-mcp](https://github.com/asif786ka/store-preflight-mcp) | a **date window** | `PolicyWindow.status_on(date)` |
-| **judge-audit-mcp** | a **judge fingerprint** | `JudgeFingerprint.comparable_to(other)` |
-
-Same model, third axis. A judge score is not a measurement of the thing being
-judged. It's a measurement of the thing being judged *as read by a particular
-judge under a particular rubric* — and the moment any part of that changes, the
-scale moves underneath you and the numbers stop being commensurable.
+A judge score is not a measurement of the thing being judged. It's a measurement
+of the thing being judged *as read by a particular judge under a particular
+rubric* — and the moment any part of that changes, the scale moves underneath
+you and the numbers stop being commensurable. Scope is the fingerprint;
+`JudgeFingerprint.comparable_to(other)` is the gate.
 
 ```python
 JudgeFingerprint(
@@ -212,8 +203,6 @@ both that the tool fires *and* that it stays quiet.
 
 ## Findings carry their own epistemics
 
-Inherited from store-preflight's confidence tiers, and load-bearing here.
-
 The bias literature reports effects that are **real but modest** — position flips
 in the 10-30% range, self-preference well under a point on a 10-point scale.
 Effects that size are trivially manufactured by sampling noise at n=20 plus a
@@ -231,10 +220,10 @@ itself**:
 - `heuristic` — underpowered or the CI straddles null. **Never gates a build**,
   whatever its severity.
 
-`temper_confidence()` is the direct analogue of `PolicyWindow.severity_on()`: the
-claim isn't hand-edited as evidence accumulates, the model does it. A tool that
-red-builds on an underpowered estimate gets switched off within a week — and then
-it audits nothing at all.
+`temper_confidence()` applies that rule automatically as evidence accumulates —
+the claim isn't hand-edited, the model does it. A tool that red-builds on an
+underpowered estimate gets switched off within a week — and then it audits
+nothing at all.
 
 ---
 
